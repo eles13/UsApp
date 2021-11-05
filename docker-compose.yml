@@ -2,8 +2,6 @@ version: '3.3'
 services:
   backend:
     build: ./backend
-    ports: 
-      - "8010:8010"
     depends_on:
       - mongodb
     deploy:
@@ -11,27 +9,18 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
-    networks:
-      - total
-    links:
-      - mongodb
+    environment: 
+      - MONGODB_CONNSTRING=mongodb://localhost:27017
+    network_mode: "host"
+
   mongodb:
     image: 'mongo'
-    ports:
-      - "27017:27017"
     volumes:
       - ./datadir/:/data/db
-    networks:
-      - total
+    network_mode: "host"
+
   frontend:
     build: ./frontend
-    ports:
-      - "8050:8050"
     depends_on:
-      - mongodb
-    networks:
-      - total
-
-networks:
-  total:
-    driver: "bridge"
+      - backend
+    network_mode: "host"

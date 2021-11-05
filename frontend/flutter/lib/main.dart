@@ -1,12 +1,10 @@
-import 'dart:html';
-import 'dart:ui';
+// ignore_for_file: avoid_print
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 
 void main() => runApp(MyApp());
@@ -65,12 +63,8 @@ class _UplWidState extends State<UplWid> {
       });
     } else {
       setStatus("Sending request...");
-      http.Response response = await http.get(
-        Uri.parse("http://127.0.0.1:8010/history"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-      );
+      http.Response response =
+          await http.get(Uri.parse("http://127.0.0.1:8010/history"));
       try {
         setStatus(
             response.statusCode == 200 ? "Successfully processed" : errMessage);
@@ -97,7 +91,7 @@ class _UplWidState extends State<UplWid> {
           response.statusCode == 200 ? "Successfully processed" : errMessage);
       setState(() {
         result_image = base64Decode(jsonDecode(response.body)["result"]);
-        show_history = true;
+        show_history = false;
         ready_to_show = true;
       });
     } catch (error) {

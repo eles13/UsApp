@@ -15,14 +15,15 @@ from detectron2.config import get_cfg
 from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog, DatasetCatalog
 
+app = FastAPI()
+mdb = MongoClient(os.environ['MONGODB_CONNSTRING'])
+print(mdb.list_database_names())
+
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
 cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
 cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
 predictor = DefaultPredictor(cfg)
-
-app = FastAPI()
-mdb = MongoClient('mongodb://localhost:27017')
 
 class ImageRequest(BaseModel):
     image: str
@@ -69,4 +70,4 @@ def get_history():
     
 if __name__ == '__main__':
     preset_db()
-    uvicorn.run(app, host='localhost', port=8010)
+    uvicorn.run(app, host='0.0.0.0', port=8010)
