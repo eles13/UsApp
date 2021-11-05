@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+  backend:
+    build: ./backend
+    ports: 
+      - "8010:8010"
+    depends_on:
+      - mongodb
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    networks:
+      - total
+    links:
+      - mongodb
+  mongodb:
+    image: 'mongo'
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./datadir/:/data/db
+    networks:
+      - total
+  frontend:
+    build: ./frontend
+    ports:
+      - "8050:8050"
+    depends_on:
+      - mongodb
+    networks:
+      - total
+
+networks:
+  total:
+    driver: "bridge"

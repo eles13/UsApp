@@ -1,0 +1,10 @@
+fastapi
+python-multipart
+torchvision
+pillow
+uvicorn
+numpy
+opencv-python
+opencv-contrib-python
+dnspython
+pymongo[srv]
