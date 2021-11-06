@@ -7,10 +7,8 @@ An app for detectron2 processing. Powered by Flutter Web.
 
 to run:
 
-docker-compose build
-docker-compose up
+```docker-compose build```
 
--------------
-in ./frontend/flutter/ 
+```docker-compose up```
 
-flutter run -d chrome
+Will be available at http://localhost:8060

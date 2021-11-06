@@ -57,23 +57,30 @@ class _UplWidState extends State<UplWid> {
   }
 
   reqForImages() async {
+    http.Response response = http.Response("ok", 200);
     if (show_history == true) {
       setState(() {
         show_history = false;
       });
     } else {
       setStatus("Sending request...");
-      http.Response response =
-          await http.get(Uri.parse("http://127.0.0.1:8010/history"));
       try {
-        setStatus(
-            response.statusCode == 200 ? "Successfully processed" : errMessage);
-        setState(() {
-          history = jsonDecode(response.body)["images"];
-          show_history = true;
-        });
+        response = await http.get(
+          Uri.parse("http://127.0.0.1:8010/history"),
+        );
+        try {
+          setStatus(response.statusCode == 200
+              ? "Successfully processed"
+              : errMessage);
+          setState(() {
+            history = json.decode(response.body.toString())["images"];
+            show_history = true;
+          });
+        } catch (error) {
+          setStatus(error.toString() + " after get " + response.body);
+        }
       } catch (error) {
-        setStatus(error.toString());
+        setStatus(error.toString() + " get");
       }
     }
   }
@@ -84,18 +91,24 @@ class _UplWidState extends State<UplWid> {
           ..fields['name'] = _image
           ..fields['image'] = base64Image
           ..headers['Content-Type'] = "application/x-www-form-urlencoded";
-    http.Response response =
-        await http.Response.fromStream(await request.send());
+    http.Response response = http.Response("ok", 200);
     try {
-      setStatus(
-          response.statusCode == 200 ? "Successfully processed" : errMessage);
-      setState(() {
-        result_image = base64Decode(jsonDecode(response.body)["result"]);
-        show_history = false;
-        ready_to_show = true;
-      });
+      http.Response response =
+          await http.Response.fromStream(await request.send());
+      try {
+        setStatus(
+            response.statusCode == 200 ? "Successfully processed" : errMessage);
+        setState(() {
+          result_image =
+              base64Decode(json.decode(response.body.toString())["result"]);
+          show_history = false;
+          ready_to_show = true;
+        });
+      } catch (error) {
+        setStatus(error.toString() + " after upl");
+      }
     } catch (error) {
-      setStatus(error.toString());
+      setStatus(error.toString() + " upl");
     }
   }
 
