@@ -138,7 +138,11 @@ class _UplWidState extends State<UplWid> {
           const SizedBox(
             height: 20.0,
           ),
-          if (_image == '' && !ready_to_show) const Text('No Image Selected'),
+          if (_image == '' && !ready_to_show)
+            const Text(
+              'No Image Selected',
+              textAlign: TextAlign.center,
+            ),
           if (_image != '' && !ready_to_show)
             Image.memory(
               raw_image,
